@@ -37,8 +37,11 @@ export default class Page extends Component {
         // axios.get(`${process.env.REACT_APP_USERS_SERVICE_URL}/greetings`)
         axios.get(`/github/access_token/` + code)
             .then((res) => {
-                console.log(res);
-                // this.setState({greetings: res.data.data.greetings});
+                const token = res.data.token;
+                if (token) {
+                    localStorage.setItem('token', token);
+                    this.setState({token: token});
+                }
             })
             .catch((err) => {
                 console.log(err);
@@ -49,9 +52,12 @@ export default class Page extends Component {
         this.getGreetings();
         const url = new URL(window.location.href);
         const code = url.searchParams.get("code");
-        if (code) {
-            console.log('yes');
-            console.log(`${process.env.REACT_APP_USERS_SERVICE_URL}`);
+        if (code === null && localStorage.getItem('token') !== null) {
+            this.setState({token: localStorage.getItem('token')})
+        } else if (code !== null && localStorage.getItem('code') === code) {
+            console.log('ignore');
+        } else {
+            console.log('Accessing Token');
             localStorage.setItem('code', code);
             this.getAccessToken(code);
         }
