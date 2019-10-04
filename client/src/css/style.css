@@ -1,0 +1,30 @@
+body{
+    background-image: linear-gradient(45deg, #F38122, #F76B58);
+}
+h1{
+    font-family: 'Lobster';
+    text-align: center;
+    padding-top: 300px;
+    font-size: 56px;
+    animation-name: fadeIn;
+    animation-duration: 3s;
+    
+}
+.customButton{
+    animation-name: fadeIn;
+    animation-duration: 4s;
+    font-family: 'Pacifico';
+    background-image: linear-gradient(to right,#F69A4D,#F69A4D,#F07B67);
+}
+h3{
+    font-family: 'Pacifico';
+    text-align: center;
+    font-size: 56px;
+    animation-name: fadeIn;
+    animation-duration: 3s;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}

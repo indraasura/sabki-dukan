@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './css/main.css';
+//import './css/main.css';
 import {Jumbotron} from 'react-bootstrap';
-import HomeSection from './components/Home';
+import Landing from './components/landing';
 import axios from 'axios';
 import {configureAnchors} from 'react-scrollable-anchor';
 
@@ -66,7 +66,7 @@ export default class Page extends Component {
     render() {
         return (
             <div>
-                <HomeSection></HomeSection>
+                <Landing/>
             </div>
         )
     }
