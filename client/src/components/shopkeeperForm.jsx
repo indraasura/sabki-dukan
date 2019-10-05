@@ -1,131 +1,180 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Success from './success'
 
 
 class ShopkeeperForm extends Component {
-  state = {
-    isRouted: false,
-    shop_name: "",
-    shop_type: "",
-    theme: "light",
-    isSubmitted: false
-  };
+    state = {
+        isRouted: false,
+        shop_name: "",
+        shop_type: "",
+        theme: "light",
+        isSubmitted: false,
+        finalData: {
+            'template_base': null,
+            'template_nav': null,
+            'tempalte_footer': null,
+            'name': null,
+            'phone_number': null
+        },
+        isTemplateBase: true,
+        isTemplateNav: false,
+        isTemplateFooter: false,
+    };
 
-  handleChange = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-  };
+    handleImageChange = e => {
+        const allData = document.getElementsByClassName("template_base");
+        for (let i = 0; i < allData.length; i++) {
+            allData[i].classList.remove('select-border');
+        }
 
- 
-  handleSubmit = () => {
-    fetch("url", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json"
-      },
-      body: JSON.stringify({
-        shop_name: this.state.shop_name,
-        shop_type: this.state.shop_type,
-        theme: this.state.theme
-      })
-    });
-    this.setState({ isSubmitted: true });
-    console.log(this.state)
-  };
+        document.getElementById(e.target.id).classList.add('select-border');
+        this.setState({
+            "template": e.target.name
+        })
+    };
 
-  
+    handleChange = e => {
+        console.log('change', e.target.name, e.target.value);
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    };
 
-  render() {
-    if (this.state.isSubmitted) {
-      return (<Success />);
-    } else {
-      return (
-        <React.Fragment>
-          <div style={{ height: "250px" }}></div>
-          <div className="card row">
-            <div className="col s12 m8 l8 offset-l2 offset-m2">
-              <br />
-              <br />
-              <form onSubmit={this.submitForm}>
-                <input
-                  name="shop_name"
-                  placeholder="Name of the shop"
-                  value={this.state.shop_name}
-                  onChange={this.handleChange}
-                />
-                <input
-                  name="shop_type"
-                  placeholder="Type of the shop"
-                  value={this.state.shop_type}
-                  onChange={this.handleChange}
-                />
+    handleTemplateBase = e => {
+        this.setState({
+            'isTemplateBase': true,
+            'isTemplateNav': false,
+            'isTemplateFooter': false,
+        })
+    };
 
-                <h4 style={{ fontSize: "18px", textAlign: "center" }}>
-                  Select theme
-                </h4>
-                <br />
-                <div className="row">
-                  <div className="col s12 m6 l6">
-                    <p>
-                      <label>
-                        <input
-                          name="theme"
-                          type="radio"
-                          value="dark"
-                          checked={this.state.theme === "dark"}
-                          onChange={this.handleChange}
-                        />
-                        <span>Dark</span>
-                      </label>
-                    </p>
-                    <div>
-                      <img
-                        src="https://i.pinimg.com/originals/ac/e0/7c/ace07c6c338c91b621d1d736ca8c40ec.jpg"
-                        alt="dark_theme"
-                        style={{ width: "100%", height: "100%" }}
-                      />
+    handleTemplateNav = e => {
+        this.setState({
+            'isTemplateNav': true,
+            'isTemplateBase': false,
+            'isTemplateFooter': false
+        })
+    };
+
+    handleTemplateFooter = e => {
+        this.setState({
+            'isTemplateFooter': true,
+            'isTemplateNav': false,
+            'isTemplateBase': false
+        })
+    };
+
+    handleSubmit = () => {
+        fetch("url", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                shop_name: this.state.shop_name,
+                shop_type: this.state.shop_type,
+                theme: this.state.theme
+            })
+        });
+        this.setState({isSubmitted: true});
+        console.log(this.state);
+    };
+
+
+    render() {
+        if (this.state.isSubmitted) {
+            return (<Success/>);
+        } else {
+            let btn_dark = "";
+            let btn_light = "";
+            if (this.state.template === "dark") {
+                btn_dark = "border-image";
+                btn_light = "";
+            } else if (this.state.template === "light") {
+                btn_dark = "";
+                btn_light = "border-image";
+            }
+            return (
+                <React.Fragment>
+                    {/*<div style={{height: "50px"}}></div>*/}
+                    <div className={"white picker-background"}>
+                        {this.state.isTemplateBase ? (
+                        <div className={"picker-row"}>
+                            <img
+                                name="base_dark"
+                                id={"base_dark"}
+                                className={"template_base"}
+                                src="https://i.pinimg.com/originals/ac/e0/7c/ace07c6c338c91b621d1d736ca8c40ec.jpg"
+                                alt="dark_theme"
+                                onClick={this.handleImageChange}
+                                style={{
+                                    width: "auto",
+                                    height: "60vh",
+                                    marginBottom: "25vh",
+                                    marginLeft: "100px",
+                                    cursor: "pointer"
+                                }}
+                            />
+                            <img
+                                name="base_light"
+                                id={"base_light"}
+                                className={"template_base"}
+                                src="https://i.pinimg.com/originals/ac/e0/7c/ace07c6c338c91b621d1d736ca8c40ec.jpg"
+                                alt="dark_theme"
+                                onClick={this.handleImageChange}
+                                style={{
+                                    width: "auto",
+                                    height: "60vh",
+                                    marginBottom: "25vh",
+                                    marginLeft: "100px",
+                                    cursor: "pointer"
+                                }}
+                            />
+                            <img
+                                name="base_solaris"
+                                id={"base_solaris"}
+                                className={"template_base"}
+                                src="https://i.pinimg.com/originals/ac/e0/7c/ace07c6c338c91b621d1d736ca8c40ec.jpg"
+                                alt="dark_theme"
+                                onClick={this.handleImageChange}
+                                style={{
+                                    width: "auto",
+                                    height: "60vh",
+                                    marginBottom: "25vh",
+                                    marginLeft: "100px",
+                                    cursor: "pointer"
+                                }}
+                            />
+                        </div>
+                        ) : (<div></div>)}
                     </div>
-                  </div>
-                  <div className="col s12 m6 l6">
-                    <p>
-                      <label>
-                        <input 
-                          name="theme"
-                          type="radio"
-                          value="light"
-                          checked={this.state.theme === "light"}
-                          onChange={this.handleChange}
-                        />
-                        <span>Light</span>
-                      </label>
-                    </p>
-                    <div style={{ height: "100%" }}>
-                      <img
-                        src="https://i.pinimg.com/originals/ac/e0/7c/ace07c6c338c91b621d1d736ca8c40ec.jpg"
-                        alt="dark_theme"
-                        style={{ width: "100%", height: "100%" }}
-                      />
+                    <div className={"white picker-menu"}>
+                        <div className={"row center"}>
+                            <div className={"col l2"}>
+                                <i className="large material-icons medium picker-icon" onClick={this.handleTemplateBase}>texture</i>
+                            </div>
+                            <div className={"col l2"}>
+                                <i className="large material-icons medium picker-icon" onClick={this.handleTemplateNav}>web</i>
+                            </div>
+                            <div className={"col l2"}>
+                                <i className="large material-icons medium picker-icon" onClick={this.handleTemplateFooter}>video_label</i>
+                            </div>
+                            <div className={"col l2"}>
+                                <i className="large material-icons medium picker-icon">toc</i>
+                            </div>
+                            <div className={"col l2"}>
+                                <i className="large material-icons medium picker-icon">view_carousel</i>
+                            </div>
+                            <div className={"col l2"}>
+                                <i className="large material-icons medium picker-icon">filter</i>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                </div>
-              </form>
-              <div style={{ textAlign: "center" }}>
-                <button
-                  className="btn btn-large green darken-3"
-                  style={{ marginBottom: "30px" }}
-                  onClick={this.handleSubmit}
-                >
-                  Submit
-                </button>
-              </div>
-            </div>
-          </div>
-        </React.Fragment>
-      );
+                </React.Fragment>
+            );
+        }
     }
-  }
 }
 
 export default ShopkeeperForm;
