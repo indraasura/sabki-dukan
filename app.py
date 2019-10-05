@@ -33,14 +33,15 @@ def get_access_token(code):
 def generate_template(data):
     with app.app_context():
         base_template = data['template_base'].split('_')
-        base_template = '_'.join(base_template[1:]) + '_' + base_template[0] + '.png'
+        base_template = '_'.join(base_template[1:]) + '_' + base_template[0] + '.html'
         nav_bar_template = data['template_nav'].split('_')
-        nav_bar_template = '_'.join(nav_bar_template[1:]) + '_' + nav_bar_template[0] + '.png'
+        nav_bar_template = '_'.join(nav_bar_template[1:]) + '_header.html'
         footer_template = data['template_footer'].split('_')
-        footer_template = '_'.join(footer_template[1:]) + '_' + footer_template[0] + '.png'
+        footer_template = '_'.join(footer_template[1:]) + '_' + footer_template[0] + '.html'
         nav_bar = Template(render_template(nav_bar_template, logo='TEST'))
         footer = Template(render_template(footer_template))
-        html = render_template(base_template, header=nav_bar, footer=footer, title='WEBSITE')
+        html = render_template(base_template, header=nav_bar, footer=footer, title='WEBSITE',
+                               shop_name=data['shop_name'], shop_content=shop_content)
         print(type(html))
     return html
 
@@ -87,6 +88,7 @@ def create_github_pages(token):
 
 def commit_frontend_code(token, username, repo, data):
     url = "https://api.github.com/repos/" + username + "/" + repo + "/contents/index.html"
+    # print(url, len(data), data, token)
 
     payload = {
         "message": "index.html Added",
@@ -98,10 +100,11 @@ def commit_frontend_code(token, username, repo, data):
     }
     headers = {
         'content-type': "application/json",
-        'authorization': "token " + token,
+        'Authorization': "token " + token,
     }
 
-    response = requests.request("POST", url, json=payload, headers=headers)
+    response = requests.request("PUT", url, json=payload, headers=headers)
+    print(response, response.text)
     if response.status_code == 201:
         return True
     else:
@@ -126,10 +129,11 @@ def start_website():
 
 @app.route('/')
 def root():
+    print('ROOT')
     global global_dict
     code = request.args.get('code')
-    print(request.args)
-    print(code, global_dict)
+    print('requesting', request.args)
+    print('code', code, global_dict)
     if code and code not in global_dict:
         access_token = get_access_token(code)
         print('GOT ', access_token)

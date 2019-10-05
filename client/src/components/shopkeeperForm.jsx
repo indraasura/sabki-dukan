@@ -31,7 +31,7 @@ class ShopkeeperForm extends Component {
             'template_nav': null,
             'template_footer': null,
             'shop_name': '',
-            'phone_number': null
+            'shop_content': null
         },
         isTemplateBase: true,
         isTemplateNav: false,
@@ -334,6 +334,14 @@ class ShopkeeperForm extends Component {
                                     className={"large-input"}
                                     placeholder="Shop Name"
                                     value={this.state.finalData.shop_name}
+                                    onChange={this.handleChange}
+                                />
+
+                                <textarea
+                                    name="shop_content"
+                                    className={"large-input"}
+                                    placeholder="Shop Content"
+                                    value={this.state.finalData.shop_content}
                                     onChange={this.handleChange}
                                 />
 
