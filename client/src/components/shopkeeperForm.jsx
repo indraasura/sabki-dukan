@@ -1,5 +1,22 @@
 import React, {Component} from "react";
 import Success from './success'
+import axios from 'axios';
+
+import panda_dark_base from '../img/panda_dark_base.png';
+import panda_dark_header from '../img/panda_dark_header.png';
+import panda_dark_footer from '../img/panda_dark_footer.png';
+
+import panda_light_base from '../img/panda_light_base.png';
+import panda_light_header from '../img/panda_light_header.png';
+import panda_light_footer from '../img/panda_light_footer.png';
+
+import pumpkin_base from '../img/pumpkin_base.png';
+import pumpkin_header from '../img/pumpkin_header.png';
+import pumpkin_footer from '../img/pumpkin_footer.png';
+
+import buttercups_base from '../img/buttercups_base.png';
+import buttercups_header from '../img/buttercups_header.png';
+import buttercups_footer from '../img/buttercups_footer.png';
 
 
 class ShopkeeperForm extends Component {
@@ -12,31 +29,37 @@ class ShopkeeperForm extends Component {
         finalData: {
             'template_base': null,
             'template_nav': null,
-            'tempalte_footer': null,
-            'name': null,
+            'template_footer': null,
+            'shop_name': '',
             'phone_number': null
         },
         isTemplateBase: true,
         isTemplateNav: false,
         isTemplateFooter: false,
+        isTemplateInput: false,
     };
 
     handleImageChange = e => {
-        const allData = document.getElementsByClassName("template_base");
+        const temp = e.target.name.split('_')[0];
+        const allData = document.getElementsByClassName('template_' + temp);
         for (let i = 0; i < allData.length; i++) {
             allData[i].classList.remove('select-border');
         }
 
         document.getElementById(e.target.id).classList.add('select-border');
+        const finalData = this.state.finalData;
+        finalData['template_' + temp] = e.target.name;
         this.setState({
-            "template": e.target.name
+            "finalData": finalData
         })
     };
 
     handleChange = e => {
         console.log('change', e.target.name, e.target.value);
+        let finalData = this.state.finalData;
+        finalData[e.target.name] = e.target.value;
         this.setState({
-            [e.target.name]: e.target.value
+            'finalData': finalData
         });
     };
 
@@ -45,6 +68,7 @@ class ShopkeeperForm extends Component {
             'isTemplateBase': true,
             'isTemplateNav': false,
             'isTemplateFooter': false,
+            'isTemplateInput': false,
         })
     };
 
@@ -52,7 +76,8 @@ class ShopkeeperForm extends Component {
         this.setState({
             'isTemplateNav': true,
             'isTemplateBase': false,
-            'isTemplateFooter': false
+            'isTemplateFooter': false,
+            'isTemplateInput': false
         })
     };
 
@@ -60,25 +85,31 @@ class ShopkeeperForm extends Component {
         this.setState({
             'isTemplateFooter': true,
             'isTemplateNav': false,
-            'isTemplateBase': false
+            'isTemplateBase': false,
+            'isTemplateInput': false
         })
     };
 
+    handleTemplateInput = e => {
+        this.setState({
+            'isTemplateInput': true,
+            'isTemplateFooter': false,
+            'isTemplateNav': false,
+            'isTemplateBase': false,
+        })
+    }
+
     handleSubmit = () => {
-        fetch("url", {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify({
-                shop_name: this.state.shop_name,
-                shop_type: this.state.shop_type,
-                theme: this.state.theme
+        axios.post('/start', {
+            token: localStorage.getItem('token'),
+            data: this.state.finalData
+        })
+            .then(function (response) {
+                console.log(response);
             })
-        });
-        this.setState({isSubmitted: true});
-        console.log(this.state);
+            .catch(function (error) {
+                console.log(error);
+            });
     };
 
 
@@ -102,10 +133,10 @@ class ShopkeeperForm extends Component {
                         {this.state.isTemplateBase ? (
                         <div className={"picker-row"}>
                             <img
-                                name="base_dark"
-                                id={"base_dark"}
+                                name="base_panda_dark"
+                                id={"base_panda_dark"}
                                 className={"template_base"}
-                                src="https://i.pinimg.com/originals/ac/e0/7c/ace07c6c338c91b621d1d736ca8c40ec.jpg"
+                                src={panda_dark_base}
                                 alt="dark_theme"
                                 onClick={this.handleImageChange}
                                 style={{
@@ -117,10 +148,10 @@ class ShopkeeperForm extends Component {
                                 }}
                             />
                             <img
-                                name="base_light"
+                                name="base_panda_light"
                                 id={"base_light"}
                                 className={"template_base"}
-                                src="https://i.pinimg.com/originals/ac/e0/7c/ace07c6c338c91b621d1d736ca8c40ec.jpg"
+                                src={panda_light_base}
                                 alt="dark_theme"
                                 onClick={this.handleImageChange}
                                 style={{
@@ -132,10 +163,25 @@ class ShopkeeperForm extends Component {
                                 }}
                             />
                             <img
-                                name="base_solaris"
-                                id={"base_solaris"}
+                                name="base_pumpkin"
+                                id={"base_pumpkin"}
                                 className={"template_base"}
-                                src="https://i.pinimg.com/originals/ac/e0/7c/ace07c6c338c91b621d1d736ca8c40ec.jpg"
+                                src={pumpkin_base}
+                                alt="dark_theme"
+                                onClick={this.handleImageChange}
+                                style={{
+                                    width: "auto",
+                                    height: "60vh",
+                                    marginBottom: "25vh",
+                                    marginLeft: "100px",
+                                    cursor: "pointer"
+                                }}
+                            />
+                            <img
+                                name="base_buttercups"
+                                id={"base_buttercups"}
+                                className={"template_base"}
+                                src={buttercups_base}
                                 alt="dark_theme"
                                 onClick={this.handleImageChange}
                                 style={{
@@ -147,6 +193,158 @@ class ShopkeeperForm extends Component {
                                 }}
                             />
                         </div>
+                        ) : (<div></div>)}
+
+                        {this.state.isTemplateNav ? (
+
+                            <div className={"picker-row"}>
+                                <img
+                                    name="nav_panda_dark"
+                                    id={"nav_panda_dark"}
+                                    className={"template_nav"}
+                                    src={panda_dark_header}
+                                    alt="dark_theme"
+                                    onClick={this.handleImageChange}
+                                    style={{
+                                        width: "auto",
+                                        height: "60vh",
+                                        marginBottom: "25vh",
+                                        marginLeft: "100px",
+                                        cursor: "pointer"
+                                    }}
+                                />
+                                <img
+                                    name="nav_panda_light"
+                                    id={"nav_panda_light"}
+                                    className={"template_nav"}
+                                    src={panda_light_header}
+                                    alt="dark_theme"
+                                    onClick={this.handleImageChange}
+                                    style={{
+                                        width: "auto",
+                                        height: "60vh",
+                                        marginBottom: "25vh",
+                                        marginLeft: "100px",
+                                        cursor: "pointer"
+                                    }}
+                                />
+                                <img
+                                    name="nav_pumpkin"
+                                    id={"nav_pumpkin"}
+                                    className={"template_nav"}
+                                    src={pumpkin_header}
+                                    alt="dark_theme"
+                                    onClick={this.handleImageChange}
+                                    style={{
+                                        width: "auto",
+                                        height: "60vh",
+                                        marginBottom: "25vh",
+                                        marginLeft: "100px",
+                                        cursor: "pointer"
+                                    }}
+                                />
+                                <img
+                                    name="nav_buttercups"
+                                    id={"nav_buttercups"}
+                                    className={"template_nav"}
+                                    src={buttercups_header}
+                                    alt="dark_theme"
+                                    onClick={this.handleImageChange}
+                                    style={{
+                                        width: "auto",
+                                        height: "60vh",
+                                        marginBottom: "25vh",
+                                        marginLeft: "100px",
+                                        cursor: "pointer"
+                                    }}
+                                />
+                            </div>
+
+                        ) : (<div></div>)}
+                        {this.state.isTemplateFooter ? (
+
+                            <div className={"picker-row"}>
+                                <img
+                                    name="footer_panda_dark"
+                                    id={"footer_panda_dark"}
+                                    className={"template_footer"}
+                                    src={panda_dark_footer}
+                                    alt="dark_theme"
+                                    onClick={this.handleImageChange}
+                                    style={{
+                                        width: "auto",
+                                        height: "60vh",
+                                        marginBottom: "25vh",
+                                        marginLeft: "100px",
+                                        cursor: "pointer"
+                                    }}
+                                />
+                                <img
+                                    name="footer_panda_light"
+                                    id={"footer_panda_light"}
+                                    className={"template_footer"}
+                                    src={panda_light_footer}
+                                    alt="dark_theme"
+                                    onClick={this.handleImageChange}
+                                    style={{
+                                        width: "auto",
+                                        height: "60vh",
+                                        marginBottom: "25vh",
+                                        marginLeft: "100px",
+                                        cursor: "pointer"
+                                    }}
+                                />
+                                <img
+                                    name="footer_pumpkin"
+                                    id={"footer_pumpkin"}
+                                    className={"template_footer"}
+                                    src={pumpkin_footer}
+                                    alt="dark_theme"
+                                    onClick={this.handleImageChange}
+                                    style={{
+                                        width: "auto",
+                                        height: "60vh",
+                                        marginBottom: "25vh",
+                                        marginLeft: "100px",
+                                        cursor: "pointer"
+                                    }}
+                                />
+                                <img
+                                    name="footer_buttercups"
+                                    id={"footer_buttercups"}
+                                    className={"template_footer"}
+                                    src={buttercups_footer}
+                                    alt="dark_theme"
+                                    onClick={this.handleImageChange}
+                                    style={{
+                                        width: "auto",
+                                        height: "60vh",
+                                        marginBottom: "25vh",
+                                        marginLeft: "100px",
+                                        cursor: "pointer"
+                                    }}
+                                />
+                            </div>
+
+                        ) : (<div></div>)}
+                        {this.state.isTemplateInput ? (
+                            <div className={"container"} style={{marginTop: "50px"}}>
+                                <input
+                                    name="shop_name"
+                                    className={"large-input"}
+                                    placeholder="Shop Name"
+                                    value={this.state.finalData.shop_name}
+                                    onChange={this.handleChange}
+                                />
+
+                                <button
+                                    className="btn btn-large green darken-3"
+                                    style={{marginBottom: "30px"}}
+                                    onClick={this.handleSubmit}
+                                >
+                                    Submit
+                                </button>
+                            </div>
                         ) : (<div></div>)}
                     </div>
                     <div className={"white picker-menu"}>
@@ -161,7 +359,7 @@ class ShopkeeperForm extends Component {
                                 <i className="large material-icons medium picker-icon" onClick={this.handleTemplateFooter}>video_label</i>
                             </div>
                             <div className={"col l2"}>
-                                <i className="large material-icons medium picker-icon">toc</i>
+                                <i className="large material-icons medium picker-icon" onClick={this.handleTemplateInput}>toc</i>
                             </div>
                             <div className={"col l2"}>
                                 <i className="large material-icons medium picker-icon">view_carousel</i>

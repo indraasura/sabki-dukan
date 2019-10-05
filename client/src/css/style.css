@@ -76,3 +76,11 @@ h3{
 .picker-icon {
     cursor: pointer;
 }
+
+.large-input {
+    border-bottom: 1.5px solid black !important;
+    -webkit-box-shadow: 0 1px 0 0 #26a69a;
+    box-shadow: 0 1px 0 0 black;
+    height: 7rem !important;
+    font-size: 32px !important;
+}
